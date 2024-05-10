@@ -5,22 +5,20 @@ public class PortalHolder : MonoBehaviour
 {
     [SerializeField] private Spawner[] _spawners;
 
-    private WaitForSeconds _waitForSeconds;
     private float _delay = 2;
 
     private void Start()
     {
-        StartCoroutine(Coldown());
+        StartCoroutine(SpawnNewEnemy());
     }
 
-    private IEnumerator Coldown()
+    private IEnumerator SpawnNewEnemy()
     {
-        _waitForSeconds = new WaitForSeconds(_delay);
         bool isWork = true;
 
         while (isWork)
         {
-            yield return _waitForSeconds;
+            yield return new WaitForSeconds(_delay);
 
             GetRandomSpawner().Spawn();
         }

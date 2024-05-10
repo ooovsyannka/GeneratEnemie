@@ -9,9 +9,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform _checkPoint;
 
     private Animator _enemyAnimator;
-    private WaitForSeconds _waitForSeconds;
     private float _delay = 2f;
     private bool _isFall;
+    private int _runAnimatorHas = Animator.StringToHash(nameof(_isFall));
+    private Vector3 _direction;
 
     private void Start()
     {
@@ -20,10 +21,9 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        Vector3 direction = transform.forward * (_speedMove * Time.deltaTime);
-        transform.Translate(direction, Space.World);
+        transform.Translate(_direction, Space.World);
 
-        _enemyAnimator.SetBool("IsFall", _isFall);
+        _enemyAnimator.SetBool(_runAnimatorHas, _isFall);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.GetComponent<Platform>())
         {
             _isFall = false;
-            StopCoroutine(Coldown());
+            StopCoroutine(DelayToDie());
         }
     }
 
@@ -40,16 +40,16 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.GetComponent<Platform>())
         {
             _isFall = true;
-            StartCoroutine(Coldown());
+            StartCoroutine(DelayToDie());
         }
     }
 
-    private IEnumerator Coldown()
+    private IEnumerator DelayToDie()
     {
-        _waitForSeconds = new WaitForSeconds(_delay);
-
-        yield return _waitForSeconds;
+        yield return new WaitForSeconds(_delay);
 
         gameObject.SetActive(false);
     }
+
+    public void SetDirection(Vector3 direction) => _direction = direction * (_speedMove * Time.deltaTime);
 }

@@ -11,18 +11,25 @@ public class Spawner : MonoBehaviour
 
         if (_pool.TryGetEnemy(out enemy))
         {
-            enemy.transform.rotation = GetRandomRotation();
+            enemy.SetDirection(GetRandomDirection());
             enemy.transform.position = _spawnPoint.position;
             enemy.gameObject.SetActive(true);
             enemy.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
     }
 
-    private Quaternion GetRandomRotation()
+    private Vector3 GetRandomDirection()
     {
-        float maxAngelY = 360;
-        float randomAngely = Random.Range(0, maxAngelY);
+        Vector3 direction = Vector3.zero;
 
-        return Quaternion.Euler(0, randomAngely, 0);
+        while (direction == Vector3.zero)
+        {
+            float randomDirectionX = Random.Range(-1, 2);
+            float randomDirectionZ = Random.Range(-1, 2);
+
+            direction = new Vector3(randomDirectionX, 0, randomDirectionZ);
+        }
+
+        return direction;
     }
 }
