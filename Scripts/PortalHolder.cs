@@ -9,16 +9,17 @@ public class PortalHolder : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SpawnNewEnemy());
+        StartCoroutine(SpawnNewEnemys());
     }
 
-    private IEnumerator SpawnNewEnemy()
+    private IEnumerator SpawnNewEnemys()
     {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(_delay); 
         bool isWork = true;
 
         while (isWork)
         {
-            yield return new WaitForSeconds(_delay);
+            yield return waitForSeconds;
 
             GetRandomSpawner().Spawn();
         }
