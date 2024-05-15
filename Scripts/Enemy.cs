@@ -1,55 +1,61 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
-
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
-    [SerializeField] private float _speedMove;
-    [SerializeField] private Transform _checkPoint;
+    private const string NameAnimation = "IsAttack";
 
-    private Animator _enemyAnimator;
-    private float _delay = 2f;
-    private bool _isFall;
-    private int _runAnimatorHas = Animator.StringToHash(nameof(_isFall));
-    private Vector3 _direction;
+    [SerializeField] private float _delay;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _positionY;
+    [SerializeField] private float _maxDistanceToTarget;
+    [SerializeField] private Animator _animator;
+
+    private int _attackAnimatorHas = Animator.StringToHash(NameAnimation);
+    private Vector3 _targetPosition;
 
     private void Start()
     {
-        _enemyAnimator = gameObject.GetComponent<Animator>();
+        transform.position = new Vector3(transform.position.x, _positionY , transform.position.z);
     }
 
     private void Update()
     {
-        transform.Translate(_direction, Space.World);
-
-        _enemyAnimator.SetBool(_runAnimatorHas, _isFall);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.GetComponent<Platform>())
+        if (TargentInZoneAttack())
         {
-            _isFall = false;
-            StopCoroutine(DelayToDie());
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.GetComponent<Platform>())
-        {
-            _isFall = true;
+            StartAnimationAttack();
             StartCoroutine(DelayToDie());
+        }
+        else
+        {
+            transform.LookAt(_targetPosition);
+            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, _speed * Time.deltaTime);
         }
     }
 
     private IEnumerator DelayToDie()
     {
-        yield return new WaitForSeconds(_delay);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(_delay);
+
+        yield return waitForSeconds;
 
         gameObject.SetActive(false);
     }
 
-    public void SetDirection(Vector3 direction) => _direction = direction * (_speedMove * Time.deltaTime);
+    public void SetTargetTransform(Transform targetTransform)
+    {
+        _targetPosition = new Vector3(targetTransform.position.x, _positionY, targetTransform.position.z);
+    }
+
+    private void StartAnimationAttack()
+    {
+        _animator.SetBool(_attackAnimatorHas, TargentInZoneAttack());
+    }
+
+    private bool TargentInZoneAttack()
+    {
+        float distanceToTarget = Vector3.Distance(transform.position, _targetPosition);
+
+        return distanceToTarget < _maxDistanceToTarget;
+    }
 }
