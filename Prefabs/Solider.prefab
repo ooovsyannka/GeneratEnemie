@@ -520,7 +520,7 @@ GameObject:
   - component: {fileID: 2612419576463207380}
   - component: {fileID: 139218815155831407}
   - component: {fileID: 1851148864498600502}
-  - component: {fileID: 450084198009193244}
+  - component: {fileID: 7641059882661045900}
   m_Layer: 0
   m_Name: Solider
   m_TagString: Untagged
@@ -568,7 +568,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -617,7 +617,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &450084198009193244
+--- !u!114 &7641059882661045900
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -626,13 +626,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1435693109241258446}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79734930f5b32bc4f942ff66619acc87, type: 3}
+  m_Script: {fileID: 11500000, guid: d23b5a82401a44f428108369b15538fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _delay: 3
-  _speed: 3
+  _delay: 4
+  _speed: 5
   _positionY: 0
-  _maxDistanceToTarget: 4
+  _maxDistanceToTarget: 3
   _animator: {fileID: 1851148864498600502}
 --- !u!1 &1790179831952075740
 GameObject:

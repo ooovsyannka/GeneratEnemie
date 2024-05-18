@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private Transform _target;
+    [SerializeField] private Target _target;
     [SerializeField] private ObjectPooler _pooler;
     [SerializeField] private TypeEnemy _typeEnemy;
 
@@ -34,8 +34,8 @@ public class Spawner : MonoBehaviour
         if (_pooler.TryGetEnemy(out enemy, _typeEnemy))
         {
             enemy.gameObject.SetActive(true);
-            enemy.transform.position = transform.position;
-            enemy.SetTargetTransform(_target);
+            enemy.transform.position = new Vector3(transform.position.x, enemy.transform.position.y, transform.position.z);
+            enemy.SetTarget(_target);
         }
     }
 }

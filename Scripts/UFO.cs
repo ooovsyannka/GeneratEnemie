@@ -1,1 +1,0 @@
-public class UFO : Enemy { }

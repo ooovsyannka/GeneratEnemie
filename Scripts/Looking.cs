@@ -13,20 +13,5 @@ public class Looking : MonoBehaviour
         float vertical = Input.GetAxis(Vertical) * _speed * Time.deltaTime;
 
         transform.Translate(horizontal, 0, vertical, Space.World);
-        Zoom();
-    }
-
-    private void Zoom()
-    {
-        float minFiledOfView = 20;
-        float maxFiledOfView = 60;
-
-        Camera camera = GetComponent<Camera>();
-
-        if (Input.GetMouseButton(1))
-            camera.fieldOfView = minFiledOfView;
-        else
-            camera.fieldOfView = maxFiledOfView;
-
     }
 }

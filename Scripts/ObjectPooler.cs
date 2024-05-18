@@ -12,7 +12,7 @@ public class ObjectPooler : MonoBehaviour
     }
 
     [SerializeField] private List<Pool> _pools;
-    [SerializeField] private Dictionary<TypeEnemy, Queue<Enemy>> _poolDictionary;
+    private Dictionary<TypeEnemy, Queue<Enemy>> _poolDictionary;
 
     private void Start()
     {
@@ -35,9 +35,16 @@ public class ObjectPooler : MonoBehaviour
 
     public bool TryGetEnemy(out Enemy enemy, TypeEnemy desiredType)
     {
-        enemy = _poolDictionary[desiredType].Dequeue();
-        _poolDictionary[desiredType].Enqueue(enemy);
+        enemy = null;
 
-        return enemy.gameObject.activeInHierarchy == false;
+        if (_poolDictionary.ContainsKey(desiredType))
+        {
+            enemy = _poolDictionary[desiredType].Dequeue();
+            _poolDictionary[desiredType].Enqueue(enemy);
+
+            return enemy.gameObject.activeInHierarchy == false;
+        }
+
+        return false;
     }
 }

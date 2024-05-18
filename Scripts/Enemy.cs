@@ -1,61 +1,68 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     private const string NameAnimation = "IsAttack";
 
-    [SerializeField] private float _delay;
     [SerializeField] private float _speed;
     [SerializeField] private float _positionY;
     [SerializeField] private float _maxDistanceToTarget;
     [SerializeField] private Animator _animator;
 
     private int _attackAnimatorHas = Animator.StringToHash(NameAnimation);
+    private float _delay = 4f;
+    private Target _target;
     private Vector3 _targetPosition;
 
     private void Start()
     {
-        transform.position = new Vector3(transform.position.x, _positionY , transform.position.z);
+        transform.position = new Vector3(transform.position.x, _positionY, transform.position.z);
     }
 
     private void Update()
     {
-        if (TargentInZoneAttack())
+        float distanceToTarget = Vector3.Distance(transform.position, _targetPosition);
+        _targetPosition = new Vector3(_target.transform.position.x, _positionY, _target.transform.position.z);
+        bool targetInZoneAttack = distanceToTarget < _maxDistanceToTarget;
+
+        _animator.SetBool(_attackAnimatorHas, targetInZoneAttack);
+
+        if (targetInZoneAttack)
         {
-            StartAnimationAttack();
-            StartCoroutine(DelayToDie());
+            if(TimerIsOver())
+            {
+                gameObject.SetActive(false);
+            }
         }
         else
         {
-            transform.LookAt(_targetPosition);
-            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, _speed * Time.deltaTime);
+            Move();
         }
     }
 
-    private IEnumerator DelayToDie()
+    private bool TimerIsOver()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(_delay);
+        float maxDelay = 5;
+        _delay -= Time.deltaTime;
 
-        yield return waitForSeconds;
+        if (_delay < 0)
+        {
+            _delay = maxDelay;
+            return true;
+        }
 
-        gameObject.SetActive(false);
+        return false;
     }
 
-    public void SetTargetTransform(Transform targetTransform)
+    public void SetTarget(Target target)
     {
-        _targetPosition = new Vector3(targetTransform.position.x, _positionY, targetTransform.position.z);
+        _target = target;
     }
 
-    private void StartAnimationAttack()
+    private void Move()
     {
-        _animator.SetBool(_attackAnimatorHas, TargentInZoneAttack());
-    }
-
-    private bool TargentInZoneAttack()
-    {
-        float distanceToTarget = Vector3.Distance(transform.position, _targetPosition);
-
-        return distanceToTarget < _maxDistanceToTarget;
+        transform.LookAt(_targetPosition);
+        transform.position = Vector3.MoveTowards(transform.position, _targetPosition, _speed * Time.deltaTime);
     }
 }
